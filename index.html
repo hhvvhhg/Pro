@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="md5.js"></script>
+    <title>Document</title>
+    <script type="text/javascript">
+        var sun = new Image();
+        var moon = new Image();
+        var earth = new Image();
+        function init(){
+        sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
+        moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
+        earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
+        window.requestAnimationFrame(draw);
+        }
+
+        function draw() {
+        var ctx = document.getElementById('canvas').getContext('2d');
+
+        ctx.globalCompositeOperation = 'destination-over';
+        ctx.clearRect(0,0,300,300); // clear canvas
+
+        ctx.fillStyle = 'rgba(0,0,0,0.4)';
+        ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+        ctx.save();
+        ctx.translate(150,150);
+
+        // Earth
+        var time = new Date();
+        ctx.rotate( ((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds() );
+        ctx.translate(105,0);
+        ctx.fillRect(0,-12,50,24); // Shadow
+        ctx.drawImage(earth,-12,-12);
+
+        // Moon
+        ctx.save();
+        ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
+        ctx.translate(0,28.5);
+        ctx.drawImage(moon,-3.5,-3.5);
+        ctx.restore();
+
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(150,150,105,0,Math.PI*2,false); // Earth orbit
+        ctx.stroke();
+
+        ctx.drawImage(sun,0,0,300,300);
+
+        window.requestAnimationFrame(draw);
+        }
+
+        init();
+    </script>
+</head>
+<style>
+    .body{
+        display:flex;
+        justify-content:center;
+        /* align-items:center; */
+        flex-direction: row;
+        width: 100%;
+        /* border: 1px solid black; */
+        }
+    .body2{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .one{
+        font-size:larger;
+    }
+    .two{
+        font-size: larger;
+        width: 200px;
+        height: 50px;
+        background-color: #33FF33;
+    }
+</style>
+<body onload="draw();">
+    <div class="body" id="body">
+        <div class="body2">
+            <div class="one">点击随机金额打赏给“潇”</div>
+            <br>
+            <button onclick="pay(((Math.floor(Math.random()*10))+1)*100)" class="two">打赏</button>
+            <br>
+            <!-- <form action="https://api.shouqianba.com/upay/v2/query" method="post">
+                <input type="text" name="terminal_sn" value="100003640013232185">
+                <br>
+                <input type="text" name="sn" value="789523123214142">
+                <br>
+                <input type="submit" value="Submit">
+            </form>  -->
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    document.getElementById("body").style.wdith = window.innerWidth+"px";
+    document.getElementById("body").style.height = window.innerHeight-20+"px";
+    // console.log(window.innerHeight)
+    // console.log(document.getElementById("body").style.height)
+    function pay(amount){
+        var client_sn=String(new Date().getTime())
+        var hash = hex_md5("input string");
+        p = [
+            "client_sn="+client_sn,
+            "notify_url=https://hooks.upyun.com/NGQNk5Iab",
+            "operator=Jason",
+            "return_url=https://hhvvhhg.github.io/Pro/return.html",
+            "subject=test",
+            "terminal_sn=100003640013232185",
+            "total_amount="+String(amount)
+        ]
+        function makeSign(body){
+            var hash = hex_md5(body);
+            return(hash.toUpperCase())
+        }
+        function makeUrl(path){
+            var base_url="https://qr.shouqianba.com/gateway?"
+            var link=""
+            var flag=0
+            for(i=0;i<path.length;i++){
+                if (flag == 0){
+                    link=link+path[i]
+                    flag=flag+1
+                }   
+                else{
+                    link=link+"&"+path[i]
+                }
+            }
+            result = {
+                "link":base_url+link,
+                "sign":makeSign(link+"&key=73740206821670b18e0a0297afe51576")
+            }        
+            return  result
+        }
+        var a = makeUrl(p)
+        var chain = a["link"]+"&sign="+a["sign"] 
+        window.location.href=String(chain);
+    }
+
+</script>
+</html>
