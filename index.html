@@ -5,56 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="md5.js"></script>
-    <title>Document</title>
-    <script type="text/javascript">
-        var sun = new Image();
-        var moon = new Image();
-        var earth = new Image();
-        function init(){
-        sun.src = 'https://mdn.mozillademos.org/files/1456/Canvas_sun.png';
-        moon.src = 'https://mdn.mozillademos.org/files/1443/Canvas_moon.png';
-        earth.src = 'https://mdn.mozillademos.org/files/1429/Canvas_earth.png';
-        window.requestAnimationFrame(draw);
-        }
-
-        function draw() {
-        var ctx = document.getElementById('canvas').getContext('2d');
-
-        ctx.globalCompositeOperation = 'destination-over';
-        ctx.clearRect(0,0,300,300); // clear canvas
-
-        ctx.fillStyle = 'rgba(0,0,0,0.4)';
-        ctx.strokeStyle = 'rgba(0,153,255,0.4)';
-        ctx.save();
-        ctx.translate(150,150);
-
-        // Earth
-        var time = new Date();
-        ctx.rotate( ((2*Math.PI)/60)*time.getSeconds() + ((2*Math.PI)/60000)*time.getMilliseconds() );
-        ctx.translate(105,0);
-        ctx.fillRect(0,-12,50,24); // Shadow
-        ctx.drawImage(earth,-12,-12);
-
-        // Moon
-        ctx.save();
-        ctx.rotate( ((2*Math.PI)/6)*time.getSeconds() + ((2*Math.PI)/6000)*time.getMilliseconds() );
-        ctx.translate(0,28.5);
-        ctx.drawImage(moon,-3.5,-3.5);
-        ctx.restore();
-
-        ctx.restore();
-
-        ctx.beginPath();
-        ctx.arc(150,150,105,0,Math.PI*2,false); // Earth orbit
-        ctx.stroke();
-
-        ctx.drawImage(sun,0,0,300,300);
-
-        window.requestAnimationFrame(draw);
-        }
-
-        init();
-    </script>
+    <title>商城测试</title>
 </head>
 <style>
     .body{
@@ -66,6 +17,7 @@
         /* border: 1px solid black; */
         }
     .body2{
+        font-size: 20px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -75,18 +27,63 @@
         font-size:larger;
     }
     .two{
-        font-size: larger;
+        width: 180px;
+        height: 30px;
+        color: white;
+        background-color: #66FF66;
+    }
+    .img-1{
+        width: 90px;
+        height: 100px;
+    }
+    .img-2,.img-3{
+       width: 25px;
+       height: 25px; 
+    }
+    .goods{
+        display: flex;
+        flex-direction:column;
+        /* justify-content: flex-start; */
+        align-items:flex-start;
         width: 200px;
-        height: 50px;
-        background-color: #33FF33;
+    }
+    .p1,.p2{
+        display: inline-block;
+        margin-left: 25px;
+        padding: 0%;
+    }
+    .p2{
+        width: 100px;
+    }
+    .img-2{
+        margin-left: 25px;
+    }
+    .d1{
+        height: 45px;
     }
 </style>
 <body onload="draw();">
     <div class="body" id="body">
         <div class="body2">
-            <div class="one">点击随机金额打赏给“潇”</div>
+            <img src="./a.jpeg" alt="" class="img-1">
+            <div class="goods">
+                <div class="d1">
+                    <p class="p1">商品</p>
+                    <p class="p2">可口可乐</p>
+                </div>
+                <div class="d1">
+                    <p class="p1">单价</p>
+                    <p class="p2">￥3</p>
+                </div>
+                <div class="d1">
+                    <p class="p1">数量</p>
+                    <!-- <img src="./add.png" class="img-2"> -->
+                    <p class="p2">1</p>
+                    <!-- <img src="./sub.png" class="img-3"> -->
+                </div>
+            </div>
             <br>
-            <button onclick="pay(((Math.floor(Math.random()*10))+1)*100)" class="two">打赏</button>
+            <button onclick="pay(3)" class="two">支付</button>
             <br>
             <!-- <form action="https://api.shouqianba.com/upay/v2/query" method="post">
                 <input type="text" name="terminal_sn" value="100003640013232185">
